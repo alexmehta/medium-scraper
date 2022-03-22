@@ -1,7 +1,5 @@
-package com.trie.server.medium.requests.scraper;
+package com.trie.server.medium.requests.scraper.article;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.trie.server.medium.entities.Article;
 import com.trie.server.medium.entities.Author;
 import org.jsoup.Jsoup;
@@ -38,7 +36,8 @@ public class ArticleService {
         Document doc = Jsoup.connect(url).get();
         System.out.println("connected " + (System.currentTimeMillis() - time));
         time = System.currentTimeMillis();
-        Author author = getAuthor(doc);
+        Author author = (authorRepository.getIfExists(getAuthor(doc).getUsername()).size() == 1) ?
+                (authorRepository.getById((authorRepository.getIfExists(getAuthor(doc).getUsername()).get(0)))) : getAuthor(doc);
         System.out.println("got author " + (System.currentTimeMillis() - time));
         time = System.currentTimeMillis();
         Article a = scrapeArticleContents(doc, author);
@@ -52,6 +51,7 @@ public class ArticleService {
     private Article scrapeArticleContents(Document doc, Author author) throws MalformedURLException, ParseException {
         String title = doc.getElementsByClass("pw-post-title").get(0).text();
         String url = doc.location();
+        String topic = doc.select("body > script:nth-child(4)").text();
         return new Article(title, author, doc.select(".pw-published-date").text(), new URL(url));
     }
 

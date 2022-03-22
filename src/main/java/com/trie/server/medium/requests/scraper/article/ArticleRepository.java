@@ -1,4 +1,4 @@
-package com.trie.server.medium.requests.scraper;
+package com.trie.server.medium.requests.scraper.article;
 
 import com.trie.server.medium.entities.Article;
 import org.springframework.data.jpa.repository.JpaRepository;

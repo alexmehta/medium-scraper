@@ -25,11 +25,14 @@ public class Article {
     private Author author;
     @Column
     private LocalDate publishDate;
-    @Column(nullable = false, unique = true, length = 512)
+    @Column(nullable = false,length = 512)
     @NotNull(message = "URL cannot be null")
     private URL url;
+
     public Article() {
     }
+
+
 
     public Article(String title, Author author, String publishDate, URL url) {
         this.title = title;
@@ -37,7 +40,10 @@ public class Article {
         try {
             this.publishDate = LocalDate.parse(publishDate, formatterWithYear);
         } catch (DateTimeParseException parseException) {
-            this.publishDate = LocalDate.parse(publishDate + ", 2022", formatterWithYear);
+            if (this.publishDate == null) this.publishDate = LocalDate.parse("Jan 1, 1980", formatterWithYear);
+            else {
+                this.publishDate = LocalDate.parse(this.publishDate + ", 2022", formatterWithYear);
+            }
         }
         this.url = url;
     }
