@@ -19,6 +19,10 @@ public class Author {
     private String username;
     @Column
     private String name;
+
+    public Author() {
+    }
+
     @NotNull
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
