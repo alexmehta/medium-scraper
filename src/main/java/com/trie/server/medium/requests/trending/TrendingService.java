@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TrendingService {
         this.articleService = articleService;
     }
 
-    public List<Article> getTrendingArticles() throws IOException, ParseException {
+    public List<Article> getTrendingArticles() throws IOException, ParseException, URISyntaxException {
         List<Article> trending = new ArrayList<>();
         Document homepage = Jsoup.connect("https://medium.com/").get();
         trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
@@ -33,7 +34,7 @@ public class TrendingService {
     }
 
 
-    public List<Author> getTrendingAuthors() throws IOException, ParseException {
+    public List<Author> getTrendingAuthors() throws IOException, ParseException, URISyntaxException {
         List<Article> trendingArticles = getTrendingArticles();
         List<Author> trendingAuthors = new ArrayList<>();
         for (Article trendingArticle : trendingArticles) {

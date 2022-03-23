@@ -1,5 +1,7 @@
 package com.trie.server.medium.entities;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.net.URL;
@@ -7,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Entity
 public class Article {
@@ -25,27 +28,33 @@ public class Article {
     private Author author;
     @Column
     private LocalDate publishDate;
-    @Column(nullable = false,length = 512)
+    @Column(nullable = false, length = 512, unique = true)
     @NotNull(message = "URL cannot be null")
+
     private URL url;
 
     public Article() {
     }
 
-
-
-    public Article(String title, Author author, String publishDate, URL url) {
+    public Article(String title, Author author, String strpublishDate, URL url) {
         this.title = title;
         this.author = author;
         try {
-            this.publishDate = LocalDate.parse(publishDate, formatterWithYear);
+            this.publishDate = LocalDate.parse(strpublishDate, formatterWithYear);
         } catch (DateTimeParseException parseException) {
-            if (this.publishDate == null) this.publishDate = LocalDate.parse("Jan 1, 1980", formatterWithYear);
-            else {
-                this.publishDate = LocalDate.parse(this.publishDate + ", 2022", formatterWithYear);
-            }
+            this.publishDate = LocalDate.parse(strpublishDate + ", 2022", formatterWithYear);
         }
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", publishDate=" + publishDate +
+                ", url=" + url +
+                '}';
     }
 
     public URL getUrl() {
@@ -71,4 +80,8 @@ public class Article {
     }
 
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

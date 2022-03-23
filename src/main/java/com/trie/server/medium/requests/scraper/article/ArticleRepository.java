@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @Query("SELECT id FROM Article where url = :url")
-    List<Long> getIfExists(URL url);
+    @Query("FROM Article a where a.url = :url")
+    List<Article> getIfExists(URL url);
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 @RestController()
@@ -14,8 +15,8 @@ public class ArticleRequestController {
     public ArticleRequestController(ArticleService articleService) {
         this.articleService = articleService;
     }
-    @PostMapping("api/v1/scrape")
-    public Article scrape(String url) throws IOException, ParseException {
+    @PostMapping("/api/v1/scrape")
+    public Article scrape(String url) throws IOException, ParseException, URISyntaxException {
 
         return articleService.getArticle(url);
     }

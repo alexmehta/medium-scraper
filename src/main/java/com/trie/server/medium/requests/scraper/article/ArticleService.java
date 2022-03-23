@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
@@ -23,36 +25,38 @@ public class ArticleService {
         this.authorRepository = authorRepository;
     }
 
-    public Article getArticle(String url) throws IOException, ParseException {
-        List<Long> a = articleRepository.getIfExists(new URL(url));
-        if (a != null && a.size() == 1) {
-            return articleRepository.getById((a.get(0)));
-        }
-        return articleRepository.save(scrapeArticle(url));
+    public URL sanatizeURL(String url) throws IOException, URISyntaxException {
+        URI u = new URI(url);
+        return new URI(u.getScheme(), u.getAuthority(), u.getPath(), null, u.getFragment()).toURL();
     }
 
-    private Article scrapeArticle(String url) throws IOException, ParseException {
-        long time = System.currentTimeMillis();
+    public Article getArticle(String url) throws IOException, ParseException, URISyntaxException {
+        URL sanatizeURL = sanatizeURL(url);
+        long system = System.currentTimeMillis();
+        List<Article> a = articleRepository.getIfExists(sanatizeURL);
+        System.out.println(System.currentTimeMillis() - system);
+        if (a != null && a.size() == 1) {
+            System.out.println("cached");
+            return a.get(0);
+        }
+        System.out.println("uncached from url" + sanatizeURL(Jsoup.connect(url).get().location()));
+        return articleRepository.save(scrapeArticle(Jsoup.connect(url).get().location()));
+    }
+
+    private Article scrapeArticle(String url) throws IOException, ParseException, URISyntaxException {
         Document doc = Jsoup.connect(url).get();
-        System.out.println("connected " + (System.currentTimeMillis() - time));
-        time = System.currentTimeMillis();
         Author author = (authorRepository.getIfExists(getAuthor(doc).getUsername()).size() == 1) ?
                 (authorRepository.getById((authorRepository.getIfExists(getAuthor(doc).getUsername()).get(0)))) : getAuthor(doc);
-        System.out.println("got author " + (System.currentTimeMillis() - time));
-        time = System.currentTimeMillis();
         Article a = scrapeArticleContents(doc, author);
-        System.out.println("got article " + (System.currentTimeMillis() - time));
         author.getArticles().add(a);
         authorRepository.save(author);
-        System.out.println("done");
         return articleRepository.save(a);
     }
 
-    private Article scrapeArticleContents(Document doc, Author author) throws MalformedURLException, ParseException {
+    private Article scrapeArticleContents(Document doc, Author author) throws IOException, URISyntaxException {
         String title = doc.getElementsByClass("pw-post-title").get(0).text();
         String url = doc.location();
-        String topic = doc.select("body > script:nth-child(4)").text();
-        return new Article(title, author, doc.select(".pw-published-date").text(), new URL(url));
+        return new Article(title, author, doc.select(".pw-published-date > span:nth-child(1)").text(), sanatizeURL(url));
     }
 
     private Author getAuthor(Document doc) throws IOException {
