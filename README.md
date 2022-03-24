@@ -3,12 +3,24 @@
 
 A RESTful API that crawls medium.com for trending articles, authors, and topics.
 
+
+# Demo
+
+
+
+
+https://user-images.githubusercontent.com/53285116/159854463-ffd0cd55-fb8a-4e0b-9960-59a33e09e6ab.mp4
+
+
+
+
 # Technologies
 
 - Spring Boot 
 - JPA 
 - H2 embeded database
 - Jsoup parser
+
 
 
 
@@ -38,4 +50,7 @@ To deploy this project run the script **after installing required libraries**:
 ## Authors
 
 - [@alexmehta](https://www.github.com/alexmehta)
+
+
+
 
