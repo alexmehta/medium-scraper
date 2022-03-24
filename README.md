@@ -16,7 +16,7 @@ A RESTful API that crawls medium.com for trending articles, authors, and topics.
 
 ## API Reference
 
-[API Docs Here](https://github.com/alexmehta/medium-scraper)
+[API Docs Here](https://github.com/alexmehta/medium-scraper/blob/main/docs/API%20docs.md)
 
 API endpoint: [http://medium.alexmehta.xyz](http://medium.alexmehta.xyz/)
 ## Deployment
