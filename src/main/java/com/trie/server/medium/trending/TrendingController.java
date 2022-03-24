@@ -17,9 +17,10 @@ public class TrendingController {
     public TrendingController(TrendingService trendingService) {
         this.trendingService = trendingService;
     }
-    @GetMapping("/api/v1/trending/tags")
-    public List<String> trendingTags() throws IOException {
-        return trendingService.getTrendingTags();
+
+    @GetMapping("/api/v1/trending/topic/")
+    public List<Article> trendingTags(String topic) throws IOException, ParseException, URISyntaxException {
+        return trendingService.getTrendingTags(topic);
     }
 
     @GetMapping("/api/v1/trending/articles")

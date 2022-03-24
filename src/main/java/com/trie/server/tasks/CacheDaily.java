@@ -16,7 +16,7 @@ public class CacheDaily {
         this.trendingService = trendingService;
     }
 
-    @Scheduled(fixedDelay = 50000)
+    @Scheduled(initialDelay = 5000, fixedDelay = 500000)
     public void getDaily() throws IOException, ParseException, URISyntaxException {
         System.out.println("running cron job to get trending page");
         trendingService.getTrendingArticles();

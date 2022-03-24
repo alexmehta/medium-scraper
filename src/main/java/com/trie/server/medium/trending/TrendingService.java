@@ -5,6 +5,8 @@ import com.trie.server.medium.entities.Author;
 import com.trie.server.medium.requests.scraper.article.ArticleService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +39,15 @@ public class TrendingService {
         return trending;
     }
 
-    public List<String> getTrendingTags() throws IOException {
-        List<String> tags = new ArrayList<>();
-        Document jsoupDoc = Jsoup.connect("https://medium.com/").get();
-        for (int i = 1; i <= 10; i++) {
-            String s = jsoupDoc.toString();
-            System.out.println(s);
+    public List<Article> getTrendingTags(String topic) throws IOException, ParseException, URISyntaxException {
+        List<Article> tags = new ArrayList<>();
+        Document jsoupDoc = Jsoup.connect("https://medium.com/tag/" + topic).get();
+        Elements content = jsoupDoc.getElementsByClass("meteredContent");
+        for (Element element : content) {
+            Elements elements = element.getElementsByAttribute("href");
+            System.out.println(elements.get(3).attr("href"));
+            Article a = articleService.getArticle("https://medium.com/" + elements.get(3).attr("href"));
+            tags.add(a);
         }
         return tags;
     }
