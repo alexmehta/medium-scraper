@@ -30,7 +30,7 @@ https://user-images.githubusercontent.com/53285116/159854463-ffd0cd55-fb8a-4e0b-
 
 [API Docs Here](https://github.com/alexmehta/medium-scraper/blob/main/docs/API%20docs.md)
 
-API endpoint: [http://medium.alexmehta.xyz](http://medium.alexmehta.xyz/)
+API endpoint: [http://med.alexmehta.xyz/](http://med.alexmehta.xyz/)
 ## Running Locally
 
 ### Required Libraries:
