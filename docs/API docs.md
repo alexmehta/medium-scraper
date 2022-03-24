@@ -23,6 +23,15 @@ API endpoint: [http://medium.alexmehta.xyz](http://medium.alexmehta.xyz/)
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. Id of item to fetch |
 
+#### Get Trending Topic Articles
+
+```http
+  GET /api/v1/trending/topic/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `topic`      | `string` | **Required**. the topic name ex: product-management|
 
 #### Request article from API
 
