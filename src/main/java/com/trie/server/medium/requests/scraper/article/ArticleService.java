@@ -2,6 +2,7 @@ package com.trie.server.medium.requests.scraper.article;
 
 import com.trie.server.medium.entities.Article;
 import com.trie.server.medium.entities.Author;
+import net.bytebuddy.asm.Advice;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -29,12 +30,10 @@ public class ArticleService {
         URI u = new URI(url);
         return new URI(u.getScheme(), u.getAuthority(), u.getPath(), null, u.getFragment()).toURL();
     }
-
     public Article getArticle(String url) throws IOException, ParseException, URISyntaxException {
         URL sanitizeURL = sanatizeURL(url);
         long system = System.currentTimeMillis();
         List<Article> a = articleRepository.getIfExists(sanitizeURL);
-        System.out.println(System.currentTimeMillis() - system);
         if (a != null && a.size() == 1) {
             return a.get(0);
         }

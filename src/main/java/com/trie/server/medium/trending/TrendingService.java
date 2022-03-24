@@ -5,6 +5,7 @@ import com.trie.server.medium.entities.Author;
 import com.trie.server.medium.requests.scraper.article.ArticleService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,17 +22,18 @@ public class TrendingService {
         this.articleService = articleService;
     }
 
-
+    @Async
+    public void getArticle(Document homepage, int n, List<Article> trending) throws IOException, ParseException, URISyntaxException {
+        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(" + n + ") > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
+        System.out.println(Thread.currentThread().getName());
+    }
 
     public List<Article> getTrendingArticles() throws IOException, ParseException, URISyntaxException {
         List<Article> trending = new ArrayList<>();
         Document homepage = Jsoup.connect("https://medium.com/").get();
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
-        trending.add(articleService.getArticle(homepage.select("div.fv:nth-child(6) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)").attr("href")));
+        for (int i = 1; i <= 6; i++) {
+            getArticle(homepage, i, trending);
+        }
         return trending;
     }
 
@@ -39,10 +41,8 @@ public class TrendingService {
         List<String> tags = new ArrayList<>();
         Document jsoupDoc = Jsoup.connect("https://medium.com/").get();
         for (int i = 1; i <= 10; i++) {
-
             String s = jsoupDoc.toString();
             System.out.println(s);
-            tags.add(query);
         }
         return tags;
     }
