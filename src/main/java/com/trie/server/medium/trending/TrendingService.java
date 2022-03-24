@@ -1,4 +1,4 @@
-package com.trie.server.medium.requests.trending;
+package com.trie.server.medium.trending;
 
 import com.trie.server.medium.entities.Article;
 import com.trie.server.medium.entities.Author;
@@ -21,6 +21,8 @@ public class TrendingService {
         this.articleService = articleService;
     }
 
+
+
     public List<Article> getTrendingArticles() throws IOException, ParseException, URISyntaxException {
         List<Article> trending = new ArrayList<>();
         Document homepage = Jsoup.connect("https://medium.com/").get();
@@ -33,6 +35,17 @@ public class TrendingService {
         return trending;
     }
 
+    public List<String> getTrendingTags() throws IOException {
+        List<String> tags = new ArrayList<>();
+        Document jsoupDoc = Jsoup.connect("https://medium.com/").get();
+        for (int i = 1; i <= 10; i++) {
+
+            String s = jsoupDoc.toString();
+            System.out.println(s);
+            tags.add(query);
+        }
+        return tags;
+    }
 
     public List<Author> getTrendingAuthors() throws IOException, ParseException, URISyntaxException {
         List<Article> trendingArticles = getTrendingArticles();

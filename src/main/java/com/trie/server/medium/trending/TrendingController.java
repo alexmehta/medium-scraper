@@ -1,9 +1,8 @@
-package com.trie.server.medium.requests.trending;
+package com.trie.server.medium.trending;
 
 import com.trie.server.medium.entities.Article;
 import com.trie.server.medium.entities.Author;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -18,7 +17,10 @@ public class TrendingController {
     public TrendingController(TrendingService trendingService) {
         this.trendingService = trendingService;
     }
-
+    @GetMapping("/api/v1/trending/tags")
+    public List<String> trendingTags() throws IOException {
+        return trendingService.getTrendingTags();
+    }
 
     @GetMapping("/api/v1/trending/articles")
     public List<Article> getTrendingArticles() throws IOException, ParseException, URISyntaxException {
